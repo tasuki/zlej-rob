@@ -1,11 +1,14 @@
 import unittest
 import re
-import zlejrob.runner
+
 from unittest_data_provider import data_provider
+
+import zlejrob.runner
+from zlejrob.exceptions import OffTheBoardError
 
 class RunnerTest(unittest.TestCase):
     def setUp(self):
-        self.runner = zlejrob.runner.Runner(width = 16, height = 12)
+        self.runner = zlejrob.runner.Runner(width=16, height=12)
 
     moves = lambda: (
         # move in the middle
@@ -33,7 +36,10 @@ class RunnerTest(unittest.TestCase):
 
     @data_provider(moves)
     def test_move(self, position, direction, result):
-        self.assertEquals(self.runner.move(position, direction), result)
+        if result == -1:
+            self.assertRaises(OffTheBoardError, self.runner.move, position, direction)
+        else:
+            self.assertEquals(self.runner.move(position, direction), result)
 
     def test_turn(self):
         self.assertEquals(self.runner.turn(0, 'R'), 1)
@@ -51,7 +57,7 @@ class RunnerTest(unittest.TestCase):
                 "            BB  "
                 "           BB   "
                 "          BB    "
-                "         BB     "
+                "         BG     "
                 "        BB      "
                 "       BB       "
                 "      BB        "
@@ -64,10 +70,12 @@ class RunnerTest(unittest.TestCase):
     }
 
     programs = lambda: (
+        ('staircase', (0, 1, 0), "|||||"),
         ('staircase', (1, 2, 0), "_F|||||"),
         ('staircase', (1, 2, 0), "_F_F|||||"),
         #('staircase', (1, 2, 1), "_F_F_F|||||"),
-        #('staircase', (2, 3, 0), "_F_L_F_F|||||"),
+        ('staircase', (2, 3, 0), "_F_L_F_F|||||"),
+        #('staircase', (19, 20, 0), "_F_L_F_R_1|||||"),
     )
 
     @data_provider(programs)

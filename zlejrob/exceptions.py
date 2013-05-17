@@ -1,0 +1,2 @@
+class OffTheBoardError(RuntimeError):
+    pass
