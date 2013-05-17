@@ -68,12 +68,18 @@ class Runner:
         Returns:
             tuple (stars collected, squares reached, unread instructions)
         """
-        # Solver set up
+        # Instruction queue
         queue = collections.deque(instructions[0])
-        position = puzzle['robotCol'] + self.width*puzzle['robotRow']
+
+        # Robot setup
+        position = puzzle['robotCol'] + self.width * puzzle['robotRow']
         direction = puzzle['robotDir']
+
+        # Local board with color changes
+        board = list(puzzle['board'])
+
+        # Original board; do not touch
         self.board = puzzle['board']
-        steps = 0
 
         # Unread instructions
         self.unread = set([instruction[2] for func in instructions
@@ -82,6 +88,9 @@ class Runner:
         # Reached fields
         self.reached = [False] * self.height * self.width
         self.reached[position] = True
+
+        # Step counter
+        steps = 0
 
         while queue:
             steps = steps + 1
@@ -92,7 +101,7 @@ class Runner:
             color, action, instruction = queue.popleft()
             self.unread.discard(instruction)
 
-            if color != '_' and color != self.board[position].lower():
+            if color != '_' and color != board[position].lower():
                 # Instruction skipped because of its color
                 continue
 
@@ -103,7 +112,7 @@ class Runner:
                     # Fallen off the board
                     return self.count()
 
-                if self.board[position] == ' ':
+                if board[position] == ' ':
                     # Fallen off the board
                     return self.count()
 
@@ -115,7 +124,7 @@ class Runner:
             elif action in ['L', 'R']:
                 direction = self.turn(direction, action)
             elif action in ['r', 'g', 'b']:
-                raise NotImplementedError
+                board[position] = action
             elif int(action) > 0:
                 queue.extendleft(reversed(instructions[int(action) - 1]))
             else:

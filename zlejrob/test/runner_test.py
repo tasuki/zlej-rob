@@ -66,7 +66,45 @@ class RunnerTest(unittest.TestCase):
                 "   bB           "
                 "                "
             )
-        }
+        },
+        'arbitrary_counting' : {
+            'robotCol': 0,
+            'robotRow': 6,
+            'robotDir': 0,
+            'board': list(
+                "                "
+                "     bgbb       "
+                "     b  b       "
+                "     b  g       "
+                "     b  b       "
+                "     b  b       "
+                "bbbbgbbbb       "
+                "     b          "
+                "     b          "
+                "     b          "
+                "     bbbbbbgbbbB"
+                "                "
+            )
+        },
+        'colorful_bar': {
+            'robotCol': 7,
+            'robotRow': 6,
+            'robotDir': 0,
+            'board': list(
+                "                "
+                "                "
+                "       RR       "
+                "       BB       "
+                "       GG       "
+                "       RR       "
+                "       bR       "
+                "       RR       "
+                "       GG       "
+                "       BB       "
+                "       RR       "
+                "                "
+            )
+        },
     }
 
     programs = lambda: (
@@ -77,6 +115,8 @@ class RunnerTest(unittest.TestCase):
         ('staircase', (2, 3, 0), "_F_L_F_F|||||"),
         ('staircase', (19, 20, 2), "_F_L_F_R_1|||_F_R||"),
         ('staircase', (13, 14, 0), "bFbLbFbRb1|||||"),
+        ('arbitrary_counting', (1, 35, 0), "_2_L_F_1|_Fb2_r_F||||"),
+        ('colorful_bar', (17, 18, 0), "_FrL_b_1|||||"),
     )
 
     @data_provider(programs)
