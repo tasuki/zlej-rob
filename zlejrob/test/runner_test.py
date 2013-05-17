@@ -75,7 +75,8 @@ class RunnerTest(unittest.TestCase):
         ('staircase', (1, 2, 0), "_F_F|||||"),
         #('staircase', (1, 2, 1), "_F_F_F|||||"),
         ('staircase', (2, 3, 0), "_F_L_F_F|||||"),
-        #('staircase', (19, 20, 0), "_F_L_F_R_1|||||"),
+        ('staircase', (19, 20, 0), "_F_L_F_R_1|||||"),
+        ('staircase', (13, 14, 0), "bFbLbFbRb1|||||"),
     )
 
     @data_provider(programs)

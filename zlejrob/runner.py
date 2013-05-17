@@ -31,7 +31,7 @@ class Runner:
             else:
                 return position - self.width
         else:
-            raise ValueError('No such direction.')
+            raise ValueError('No direction %s.' % direction)
 
     def turn(self, direction, turn):
         """Rotate from direction."""
@@ -40,13 +40,13 @@ class Runner:
         elif turn == 'R':
             new = direction + 1
         else:
-            raise ValueError('No such rotation direction.')
+            raise ValueError('No rotational direction %s.' % turn)
         return new % 4
 
     def collected_all(self, board, reached):
         """Have we collected all the stars?"""
         for position,color in enumerate(board):
-            if color == 'B' and reached[position] == False:
+            if color in ['R', 'G', 'B'] and reached[position] == False:
                 return False
         return True
 
@@ -54,10 +54,10 @@ class Runner:
         """Get collected stars, reached fields, and unused instructions."""
         collected = 0; unused = 0
         for position,color in enumerate(board):
-            if color == 'B' and reached[position] == True:
+            if color in ['R', 'G', 'B'] and reached[position] == True:
                 collected = collected + 1
 
-        return (collected, len([x for x in reached if x == True]), unused)
+        return (collected, reached.count(True), unused)
 
     def run(self, puzzle, instructions):
         """Run instruction set on puzzle
@@ -102,10 +102,14 @@ class Runner:
                     # Collected all stars
                     return self.count(board, reached)
 
-            elif action == 'L' or action == 'R':
+            elif action in ['L', 'R']:
                 direction = self.turn(direction, action)
-            else:
+            elif action in ['r', 'g', 'b']:
                 raise NotImplementedError
+            elif int(action) > 0:
+                queue.extendleft(reversed(instructions[int(action) - 1]))
+            else:
+                raise ValueError('No action: %s.' % action)
 
         # Ran out of instructions
         return self.count(board, reached)
