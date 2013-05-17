@@ -43,21 +43,21 @@ class Runner:
             raise ValueError('No rotational direction %s.' % turn)
         return new % 4
 
-    def collected_all(self, board, reached):
+    def collected_all(self):
         """Have we collected all the stars?"""
-        for position,color in enumerate(board):
-            if color in ['R', 'G', 'B'] and reached[position] == False:
+        for position,color in enumerate(self.board):
+            if color in ['R', 'G', 'B'] and self.reached[position] == False:
                 return False
         return True
 
-    def count(self, board, reached):
-        """Get collected stars, reached fields, and unused instructions."""
-        collected = 0; unused = 0
-        for position,color in enumerate(board):
-            if color in ['R', 'G', 'B'] and reached[position] == True:
+    def count(self):
+        """Get collected stars, reached fields, and unread instructions."""
+        collected = 0
+        for position,color in enumerate(self.board):
+            if color in ['R', 'G', 'B'] and self.reached[position] == True:
                 collected = collected + 1
 
-        return (collected, reached.count(True), unused)
+        return (collected, self.reached.count(True), len(self.unread))
 
     def run(self, puzzle, instructions):
         """Run instruction set on puzzle
@@ -66,25 +66,33 @@ class Runner:
             puzzle: dict with puzzle information
             instructions: list of functions
         Returns:
-            tuple (stars collected, squares reached, instructions skipped)
+            tuple (stars collected, squares reached, unread instructions)
         """
+        # Solver set up
         queue = collections.deque(instructions[0])
         position = puzzle['robotCol'] + self.width*puzzle['robotRow']
         direction = puzzle['robotDir']
-        board = puzzle['board']
+        self.board = puzzle['board']
         steps = 0
 
-        reached = [False] * self.height * self.width
-        reached[position] = True
+        # Unread instructions
+        self.unread = set([instruction[2] for func in instructions
+                           for instruction in func])
+
+        # Reached fields
+        self.reached = [False] * self.height * self.width
+        self.reached[position] = True
 
         while queue:
             steps = steps + 1
             if steps > self.max_steps:
                 # Step limit exceeded
-                return self.count(board, reached)
+                return self.count()
 
             color, action, instruction = queue.popleft()
-            if color != '_' and color != board[position].lower():
+            self.unread.discard(instruction)
+
+            if color != '_' and color != self.board[position].lower():
                 # Instruction skipped because of its color
                 continue
 
@@ -93,16 +101,16 @@ class Runner:
                     position = self.move(position, direction)
                 except OffTheBoardError:
                     # Fallen off the board
-                    return self.count(board, reached)
+                    return self.count()
 
-                if board[position] == ' ':
+                if self.board[position] == ' ':
                     # Fallen off the board
-                    return self.count(board, reached)
+                    return self.count()
 
-                reached[position] = True
-                if self.collected_all(board, reached):
+                self.reached[position] = True
+                if self.collected_all():
                     # Collected all stars
-                    return self.count(board, reached)
+                    return self.count()
 
             elif action in ['L', 'R']:
                 direction = self.turn(direction, action)
@@ -114,4 +122,4 @@ class Runner:
                 raise ValueError('No action: %s.' % action)
 
         # Ran out of instructions
-        return self.count(board, reached)
+        return self.count()
