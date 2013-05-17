@@ -62,9 +62,11 @@ class Runner:
     def run(self, puzzle, instructions):
         """Run instruction set on puzzle
 
-        :param dict puzzle
-        :param list instructions list of functions, where function is list of instructions
-        :return tuple (stars collected, squares reached, instructions skipped)
+        Args:
+            puzzle: dict with puzzle information
+            instructions: list of functions
+        Returns:
+            tuple (stars collected, squares reached, instructions skipped)
         """
         queue = collections.deque(instructions[0])
         position = puzzle['robotCol'] + self.width*puzzle['robotRow']
@@ -81,7 +83,7 @@ class Runner:
                 # Step limit exceeded
                 return self.count(board, reached)
 
-            color, action = queue.popleft()
+            color, action, instruction = queue.popleft()
             if color != '_' and color != board[position].lower():
                 # Instruction skipped because of its color
                 continue

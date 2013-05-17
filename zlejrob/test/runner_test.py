@@ -1,14 +1,14 @@
 import unittest
-import re
 
 from unittest_data_provider import data_provider
 
-import zlejrob.runner
+from zlejrob.runner import Runner
+from zlejrob.parser import Parser
 from zlejrob.exceptions import OffTheBoardError
 
 class RunnerTest(unittest.TestCase):
     def setUp(self):
-        self.runner = zlejrob.runner.Runner(width=16, height=12)
+        self.runner = Runner(width=16, height=12)
 
     moves = lambda: (
         # move in the middle
@@ -82,11 +82,8 @@ class RunnerTest(unittest.TestCase):
     @data_provider(programs)
     def test_run(self, puzzle_name, expected, program):
         puzzle = self.puzzles[puzzle_name]
-
-        # Instruction list from string; TODO abstract
-        instructions = [list(i) for i in re.split('\|', program)]
-        for k,func in enumerate(instructions):
-            instructions[k] = [tuple(func[i:i+2]) for i in range(0, len(func), 2)]
+        p = Parser()
+        instructions = p.instructions_from_string(program)
 
         self.assertEquals(self.runner.run(puzzle, instructions), expected)
 
