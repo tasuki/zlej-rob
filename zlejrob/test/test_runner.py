@@ -1,4 +1,4 @@
-import unittest2
+import unittest
 
 from unittest_data_provider import data_provider
 
@@ -6,7 +6,7 @@ from zlejrob.runner import Runner
 from zlejrob.parser import Parser
 from zlejrob.exceptions import OffTheBoardError
 
-class RunnerTest(unittest2.TestCase):
+class RunnerTest(unittest.TestCase):
     def setUp(self):
         self.runner = Runner(width=16, height=12)
 
@@ -39,13 +39,13 @@ class RunnerTest(unittest2.TestCase):
         if result == -1:
             self.assertRaises(OffTheBoardError, self.runner.move, position, direction)
         else:
-            self.assertEquals(self.runner.move(position, direction), result)
+            self.assertEqual(self.runner.move(position, direction), result)
 
     def test_turn(self):
-        self.assertEquals(self.runner.turn(0, 'R'), 1)
-        self.assertEquals(self.runner.turn(0, 'L'), 3)
-        self.assertEquals(self.runner.turn(3, 'R'), 0)
-        self.assertEquals(self.runner.turn(3, 'L'), 2)
+        self.assertEqual(self.runner.turn(0, 'R'), 1)
+        self.assertEqual(self.runner.turn(0, 'L'), 3)
+        self.assertEqual(self.runner.turn(3, 'R'), 0)
+        self.assertEqual(self.runner.turn(3, 'L'), 2)
 
     puzzles = {
         'staircase' : {
@@ -125,8 +125,8 @@ class RunnerTest(unittest2.TestCase):
         p = Parser()
         instructions = p.instructions_from_string(program)
 
-        self.assertEquals(self.runner.run(puzzle, instructions), expected)
+        self.assertEqual(self.runner.run(puzzle, instructions), expected)
 
 
 if __name__ == '__main__':
-    unittest2.main()
+    unittest.main()
