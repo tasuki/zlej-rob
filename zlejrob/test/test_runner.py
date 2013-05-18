@@ -5,6 +5,7 @@ from unittest_data_provider import data_provider
 from zlejrob.runner import Runner
 from zlejrob.parser import Parser
 from zlejrob.exceptions import OffTheBoardError
+import puzzles
 
 class RunnerTest(unittest.TestCase):
     def setUp(self):
@@ -47,66 +48,6 @@ class RunnerTest(unittest.TestCase):
         self.assertEqual(self.runner.turn(3, 'R'), 0)
         self.assertEqual(self.runner.turn(3, 'L'), 2)
 
-    puzzles = {
-        'staircase' : {
-            'robotCol': 3,
-            'robotRow': 10,
-            'robotDir': 0,
-            'board': list(
-                "                "
-                "            BB  "
-                "           BB   "
-                "          BB    "
-                "         BG     "
-                "        BB      "
-                "       BB       "
-                "      BB        "
-                "     BB         "
-                "    BB          "
-                "   bB           "
-                "                "
-            )
-        },
-        'arbitrary_counting' : {
-            'robotCol': 0,
-            'robotRow': 6,
-            'robotDir': 0,
-            'board': list(
-                "                "
-                "     bgbb       "
-                "     b  b       "
-                "     b  g       "
-                "     b  b       "
-                "     b  b       "
-                "bbbbgbbbb       "
-                "     b          "
-                "     b          "
-                "     b          "
-                "     bbbbbbgbbbB"
-                "                "
-            )
-        },
-        'colorful_bar': {
-            'robotCol': 7,
-            'robotRow': 6,
-            'robotDir': 0,
-            'board': list(
-                "                "
-                "                "
-                "       RR       "
-                "       BB       "
-                "       GG       "
-                "       RR       "
-                "       bR       "
-                "       RR       "
-                "       GG       "
-                "       BB       "
-                "       RR       "
-                "                "
-            )
-        },
-    }
-
     programs = lambda: (
         ('staircase', (0, 1, 0), "|||||"),
         ('staircase', (1, 2, 0), "_F|||||"),
@@ -121,7 +62,7 @@ class RunnerTest(unittest.TestCase):
 
     @data_provider(programs)
     def test_run(self, puzzle_name, expected, program):
-        puzzle = self.puzzles[puzzle_name]
+        puzzle = puzzles.puzzles[puzzle_name]
         p = Parser()
         instructions = p.instructions_from_string(program)
 
