@@ -5,7 +5,7 @@ from unittest_data_provider import data_provider
 from zlejrob.runner import Runner
 from zlejrob.parser import Parser
 from zlejrob.exceptions import OffTheBoardError
-import puzzles
+from zlejrob.test import puzzles
 
 class RunnerTest(unittest.TestCase):
     def setUp(self):
