@@ -3,6 +3,7 @@ import collections
 from zlejrob.exceptions import OffTheBoardError
 
 class Runner:
+    COLORS = ('R', 'G', 'B')
     def __init__(self, width=16, height=12, max_steps=1000):
         self.width  = width
         self.height = height
@@ -46,7 +47,7 @@ class Runner:
     def collected_all(self):
         """Have we collected all the stars?"""
         for position,color in enumerate(self.board):
-            if color in ['R', 'G', 'B'] and self.reached[position] == False:
+            if color in self.COLORS  and self.reached[position] == False:
                 return False
         return True
 
@@ -54,7 +55,7 @@ class Runner:
         """Get collected stars, reached fields, and unread instructions."""
         collected = 0
         for position,color in enumerate(self.board):
-            if color in ['R', 'G', 'B'] and self.reached[position] == True:
+            if color in self.COLORS and self.reached[position] == True:
                 collected = collected + 1
 
         return (collected, self.reached.count(True), len(self.unread))
