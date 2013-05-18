@@ -1,4 +1,4 @@
-import unittest
+import unittest2
 
 from unittest_data_provider import data_provider
 
@@ -6,7 +6,7 @@ from zlejrob.runner import Runner
 from zlejrob.parser import Parser
 from zlejrob.exceptions import OffTheBoardError
 
-class RunnerTest(unittest.TestCase):
+class RunnerTest(unittest2.TestCase):
     def setUp(self):
         self.runner = Runner(width=16, height=12)
 
@@ -129,4 +129,4 @@ class RunnerTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest2.main()

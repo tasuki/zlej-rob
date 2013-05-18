@@ -1,7 +1,7 @@
-import unittest
+import unittest2
 import zlejrob.parser
 
-class ParserTest(unittest.TestCase):
+class ParserTest(unittest2.TestCase):
     def setUp(self):
         self.parser = zlejrob.parser.Parser()
 
@@ -24,4 +24,4 @@ class ParserTest(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest2.main()
