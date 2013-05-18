@@ -13,6 +13,7 @@ class SolverTest(unittest.TestCase):
             'mutability': 1,
             'offsprings': 100,
             'survivors': 100,
+            #'debug': True,
         })
 
     def test_get_instruction_numbers(self):
@@ -48,9 +49,14 @@ class SolverTest(unittest.TestCase):
         self.assertEqual(4, len(program[1]))
         self.assertEqual(0, len(program[2]))
 
-    def test_solve(self):
-        # TODO
-        self.solver.solve(puzzles.puzzles['staircase'])
+    puzzles = lambda: (
+        ('staircase',),
+        ('colorful_bar',),
+    )
+
+    @data_provider(puzzles)
+    def test_solve(self, puzzle):
+        program = self.solver.solve(puzzles.puzzles[puzzle])
 
 
 if __name__ == '__main__':

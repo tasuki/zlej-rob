@@ -63,3 +63,52 @@ class Solver:
     def solve(self, puzzle):
         # programs ordered by their score (low scores potentially dropped)
         programs_ordered = [set() for x in range(self.get_max_score(puzzle))]
+        programs_ordered[1].add(((), (), (), (), ()))
+
+        total_stars = len([x for x in puzzle['board'] if x in ['R', 'G', 'B']])
+
+        generation = 0
+        while True:
+            survivors = 0
+            generation += 1
+            clearing = False
+            score = self.get_max_score(puzzle)
+            for programs in reversed(programs_ordered):
+                score -= 1
+                if clearing == True:
+                    programs_ordered[score].clear()
+
+                length = len(programs)
+                if length == 0: continue
+
+                survivors += length
+                if survivors > self.settings['survivors']:
+                    if 'debug' in self.settings:
+                        print('Generation %i, survivors %i' % (generation, survivors))
+                    clearing = True
+                    continue # TODO remove lesser solutions from list
+
+                for program in programs:
+                    for i in range(self.settings['offsprings']):
+                        mutation = self.mutate(puzzle, program)
+                        stars, reached, unread = self.runner.run(puzzle, mutation)
+                        if stars == total_stars:
+                            if 'debug' in self.settings:
+                                print(' ')
+                                print('SOLVED')
+                                print('Generation %i' % generation)
+                                print(mutation)
+                            return mutation
+                        mutation_score = stars*2 + reached - unread*5
+                        if mutation_score > score:
+                            programs_ordered[mutation_score].add(mutation)
+
+            if 'debug' in self.settings:
+                score = self.get_max_score(puzzle)
+                for programs in reversed(programs_ordered):
+                    score -= 1
+                    if len(programs):
+                        print('Generation %i, score %i' % (generation, score))
+                        #for program in programs:
+                        #    print program
+                        break
