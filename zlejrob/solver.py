@@ -75,9 +75,9 @@ class Solver:
             survivors = 0
             generation += 1
             clearing = False
-            score = self.get_max_score(puzzle)
-            for programs in reversed(programs_ordered):
-                score -= 1
+            for i,programs in enumerate(reversed(programs_ordered)):
+                score = self.get_max_score(puzzle) - i - 1
+
                 if clearing == True:
                     programs_ordered[score].clear()
 
@@ -111,9 +111,8 @@ class Solver:
                             return mutation
 
             if 'debug' in self.settings:
-                score = self.get_max_score(puzzle)
-                for programs in reversed(programs_ordered):
-                    score -= 1
+                for i,programs in enumerate(reversed(programs_ordered)):
+                    score = self.get_max_score(puzzle) - i - 1
                     if len(programs):
                         print('Generation %i, score %i, survivors %i, programs %i'
                               % (generation, score, survivors, len(programs_all)))
