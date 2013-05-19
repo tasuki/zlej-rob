@@ -64,6 +64,7 @@ class Solver:
         # programs ordered by their score (low scores potentially dropped)
         programs_ordered = [set() for x in range(self.get_max_score(puzzle))]
         programs_ordered[1].add(((), (), (), (), ()))
+        programs_all = set()
 
         total_stars = len([x for x in puzzle['board'] if x in ['R', 'G', 'B']])
 
@@ -90,7 +91,11 @@ class Solver:
 
                 for program in programs:
                     for i in range(self.settings['offsprings']):
-                        mutation = self.mutate(puzzle, program)
+                        while True:
+                            mutation = self.mutate(puzzle, program)
+                            if mutation not in programs_all: break
+                        programs_all.add(mutation)
+
                         stars, reached, unread = self.runner.run(puzzle, mutation)
                         if stars == total_stars:
                             if 'debug' in self.settings:
