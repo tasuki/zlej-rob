@@ -86,10 +86,8 @@ class Solver:
 
                 survivors += length
                 if survivors > self.settings['survivors']:
-                    if 'debug' in self.settings:
-                        print('Generation %i, survivors %i' % (generation, survivors))
                     clearing = True
-                    continue # TODO remove lesser solutions from list
+                    continue
 
                 for program in programs:
                     for i in range(self.settings['offsprings']):
@@ -99,23 +97,26 @@ class Solver:
                         programs_all.add(mutation)
 
                         stars, reached, unread = self.runner.run(puzzle, mutation)
+                        mutation_score = stars*2 + reached - unread*5
+                        if mutation_score > score:
+                            programs_ordered[mutation_score].add(mutation)
+
                         if stars == total_stars:
                             if 'debug' in self.settings:
                                 print(' ')
                                 print('SOLVED')
-                                print('Generation %i' % generation)
+                                print('Generation %i, score %i, survivors %i, programs %i'
+                                      % (generation, mutation_score, survivors, len(programs_all)))
                                 print(mutation)
                             return mutation
-                        mutation_score = stars*2 + reached - unread*5
-                        if mutation_score > score:
-                            programs_ordered[mutation_score].add(mutation)
 
             if 'debug' in self.settings:
                 score = self.get_max_score(puzzle)
                 for programs in reversed(programs_ordered):
                     score -= 1
                     if len(programs):
-                        print('Generation %i, score %i' % (generation, score))
+                        print('Generation %i, score %i, survivors %i, programs %i'
+                              % (generation, score, survivors, len(programs_all)))
                         #for program in programs:
                         #    print program
                         break
