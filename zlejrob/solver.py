@@ -42,6 +42,8 @@ class Solver:
                                   self.settings['mutability']))
 
         instructions = self.get_instruction_numbers(puzzle['subs'])
+        if (mutations > len(instructions)):
+            mutations = len(instructions)
         sampled = random.sample(instructions, mutations)
 
         # TODO refactor clusterfuck
