@@ -60,7 +60,7 @@ class Solver:
                 else:
                     try:
                         clusterfuck[k][i] = program[k][i]
-                    except:
+                    except IndexError:
                         pass
 
         return tuple(tuple(i for i in func if i != None) for func in clusterfuck)
