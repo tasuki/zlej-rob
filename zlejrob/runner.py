@@ -52,13 +52,13 @@ class Runner:
         return True
 
     def count(self):
-        """Get collected stars, reached fields, and unread instructions."""
+        """Get number of collected stars and reached fields."""
         collected = 0
         for position,color in enumerate(self.board):
             if color in self.COLORS and self.reached[position] == True:
                 collected = collected + 1
 
-        return (collected, self.reached.count(True), len(self.unread))
+        return (collected, self.reached.count(True))
 
     def run(self, puzzle, instructions):
         """Run instruction set on puzzle
@@ -67,7 +67,7 @@ class Runner:
             puzzle: dict with puzzle information
             instructions: list of functions
         Returns:
-            tuple (stars collected, squares reached, unread instructions)
+            tuple (stars collected, squares reached)
         """
         # Instruction queue
         queue = collections.deque(instructions[0])
@@ -81,10 +81,6 @@ class Runner:
 
         # Original board; do not touch
         self.board = puzzle['board']
-
-        # Unread instructions
-        self.unread = set([instruction[2] for func in instructions
-                           for instruction in func])
 
         # Reached fields
         self.reached = [False] * self.height * self.width
@@ -100,7 +96,6 @@ class Runner:
                 return self.count()
 
             color, action, instruction = queue.popleft()
-            self.unread.discard(instruction)
 
             if color != '_' and color != board[position].lower():
                 # Instruction skipped because of its color

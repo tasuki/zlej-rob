@@ -51,9 +51,12 @@ class Solver:
         for k,func in enumerate(clusterfuck):
             for i,inst in enumerate(func):
                 if k*10 + i in sampled:
-                    color = random.choice(self.COLORS)
-                    action = random.choice(self.get_actions(puzzle))
-                    clusterfuck[k][i] = (color, action, k*10 + i)
+                    if random.random() < self.settings['degeneration']:
+                        clusterfuck[k][i] = None
+                    else:
+                        color = random.choice(self.COLORS)
+                        action = random.choice(self.get_actions(puzzle))
+                        clusterfuck[k][i] = (color, action, k*10 + i)
                 else:
                     try:
                         clusterfuck[k][i] = program[k][i]
@@ -96,8 +99,11 @@ class Solver:
                             if mutation not in programs_all: break
                         programs_all.add(mutation)
 
-                        stars, reached, unread = self.runner.run(puzzle, mutation)
-                        mutation_score = stars*2 + reached - unread*5
+                        stars, reached = self.runner.run(puzzle, mutation)
+                        mutation_score = (stars * self.settings['star_score']
+                                          + reached * self.settings['reached_score']
+                                          - sum([len(x) for x in mutation]
+                                            * self.settings['length_penalty']))
                         if mutation_score > score:
                             programs_ordered[mutation_score].add(mutation)
 
