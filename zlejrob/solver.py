@@ -1,6 +1,8 @@
 import math
 import random
 
+from zlejrob.parser import Parser
+
 class Solver:
     COLORS = ('_', 'r', 'g', 'b')
 
@@ -109,19 +111,23 @@ class Solver:
 
                         if stars == total_stars:
                             if 'debug' in self.settings:
+                                parser = Parser()
                                 print(' ')
                                 print('SOLVED')
                                 print('Generation %i, score %i, survivors %i, programs %i'
                                       % (generation, mutation_score, survivors, len(programs_all)))
-                                print(mutation)
+                                print(parser.string_from_instructions(mutation))
                             return mutation
 
             if 'debug' in self.settings:
+                max_score = False
                 for i,programs in enumerate(reversed(programs_ordered)):
                     score = self.get_max_score(puzzle) - i - 1
                     if len(programs):
-                        print('Generation %i, score %i, survivors %i, programs %i'
-                              % (generation, score, survivors, len(programs_all)))
-                        #for program in programs:
-                        #    print program
-                        break
+                        if max_score == False:
+                            max_score = score
+                            max_count = len(programs)
+                        cutoff = score
+
+                print('Generation %i, max score %i (%i programs), cutoff %i, survivors %i, programs %i'
+                      % (generation, max_score, max_count, cutoff, survivors, len(programs_all)))
