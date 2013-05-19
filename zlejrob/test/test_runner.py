@@ -50,25 +50,23 @@ class RunnerTest(unittest.TestCase):
 
     programs = lambda: (
         # no instructions
-        ('staircase', (0, 1, 0), "|||||"),
+        ('staircase', (0, 1), "|||||"),
         # end of instructions
-        ('staircase', (1, 2, 0), "_F|||||"),
+        ('staircase', (1, 2), "_F|||||"),
         # jump off the board
-        ('staircase', (1, 2, 0), "_F_F|||||"),
-        # jump off the board before reading all instructions
-        ('staircase', (1, 2, 1), "_F_F_F|||||"),
+        ('staircase', (1, 2), "_F_F|||||"),
         # go a bit further
-        ('staircase', (2, 3, 0), "_F_L_F_F|||||"),
+        ('staircase', (2, 3), "_F_L_F_F|||||"),
         # infinite loop
-        ('staircase', (1, 2, 0), "_F_L_L_1|||||"),
+        ('staircase', (1, 2), "_F_L_L_1|||||"),
         # success!
-        ('staircase', (19, 20, 2), "_F_L_F_R_1|||_F_R||"),
+        ('staircase', (19, 20), "_F_L_F_R_1|||_F_R||"),
         # fail because of color
-        ('staircase', (13, 14, 0), "bFbLbFbRb1|||||"),
+        ('staircase', (13, 14), "bFbLbFbRb1|||||"),
         # recursion
-        ('arbitrary_counting', (1, 35, 0), "_2_L_F_1|_Fb2_r_F||||"),
+        ('arbitrary_counting', (1, 35), "_2_L_F_1|_Fb2_r_F||||"),
         # coloring
-        ('colorful_bar', (17, 18, 0), "_FrL_b_1|||||"),
+        ('colorful_bar', (17, 18), "_FrL_b_1|||||"),
     )
 
     @data_provider(programs)

@@ -9,7 +9,10 @@ from zlejrob.test import puzzles
 class SolverTest(unittest.TestCase):
     def setUp(self):
         self.solver = Solver(Runner(), {
-            'star_score': 2,
+            'star_score': 4,
+            'reached_score': 2,
+            'length_penalty': 1,
+            'degeneration': 0.3,
             'mutability': 1,
             'offsprings': 100,
             'survivors': 100,
@@ -43,10 +46,16 @@ class SolverTest(unittest.TestCase):
             'allowedCommands': 0,
         }
         program = ((), (), (), (), ())
+        reached_1 = False
+        reached_2 = False
         for i in range(100):
             program = self.solver.mutate(puzzle, program)
-        self.assertEqual(3, len(program[0]))
-        self.assertEqual(4, len(program[1]))
+            if len(program[0]) == 3:
+                reached_1 = True
+            if len(program[1]) == 4:
+                reached_2 = True
+        self.assertTrue(reached_1)
+        self.assertTrue(reached_2)
         self.assertEqual(0, len(program[2]))
 
     puzzles = lambda: (
