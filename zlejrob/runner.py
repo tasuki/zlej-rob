@@ -37,12 +37,12 @@ class Runner:
     def turn(self, direction, turn):
         """Rotate from direction."""
         if turn == 'L':
-            new = direction - 1
+            direction -= 1
         elif turn == 'R':
-            new = direction + 1
+            direction += 1
         else:
             raise ValueError('No rotational direction %s.' % turn)
-        return new % 4
+        return direction % 4
 
     def collected_all(self):
         """Have we collected all the stars?"""
@@ -56,7 +56,7 @@ class Runner:
         collected = 0
         for position,color in enumerate(self.board):
             if color in self.COLORS and self.reached[position] == True:
-                collected = collected + 1
+                collected += 1
 
         return (collected, self.reached.count(True))
 
@@ -90,7 +90,7 @@ class Runner:
         steps = 0
 
         while queue:
-            steps = steps + 1
+            steps += 1
             if steps > self.max_steps:
                 # Step limit exceeded
                 return self.count()
