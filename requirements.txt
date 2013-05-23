@@ -1,1 +1,2 @@
 unittest-data-provider>=1.0.1
+requests>=1.2.0
