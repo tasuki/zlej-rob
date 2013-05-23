@@ -44,6 +44,9 @@ puzzles = {
     },
 
     'arbitrary_counting' : {
+        'id': 1539,
+        'title': 'arbitrary counting',
+        'about': 'if you can count, is this easy?',
         'robotCol': 0,
         'robotRow': 6,
         'robotDir': 0,
