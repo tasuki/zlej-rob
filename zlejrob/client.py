@@ -1,5 +1,7 @@
 import re
+
 import requests
+from bs4 import BeautifulSoup
 
 from zlejrob.exceptions import UnexpectedHTTPStatusCode
 
@@ -45,8 +47,31 @@ class Client:
         puzzle = re.search('var puzzles = \[(.*?)\];', content, re.DOTALL)
         return re.sub('([a-zA-Z]*):', '"\\1":', puzzle.group(1))
 
-    def get_puzzlelist(self):
+    def get_puzzlelist(self, sort_by="campaign", filter_by=None):
         """Get list of existing puzzles."""
         self.login()
-        response = self.session.get(self.baseurl + "js/index.aspx?sortby=date")
-        # TODO
+        response = self.session.get(self.baseurl + "js/index.aspx?sortby=" + sort_by)
+
+        puzzles = []
+        soup = BeautifulSoup(response.text)
+        for row in soup.table.find_all('tr'):
+            cells = row.find_all('td')
+            if len(cells) == 0:
+                continue
+
+            puzzle = ({
+                'id':         str(cells[0].contents[0]),
+                'title':      str(cells[1].contents[0]),
+                'solved':     str(cells[2].contents[0]),
+                'author':     str(cells[3].contents[0]),
+                'difficulty': str(cells[4].contents[0]),
+                'liked':      str(cells[5].contents[0]),
+                'comments':   str(cells[6].contents[0]),
+            })
+
+            if filter_by:
+                if puzzle[filter_by[0]] != filter_by[1]:
+                    continue
+
+            puzzles.append(puzzle)
+        return puzzles

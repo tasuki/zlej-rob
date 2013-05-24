@@ -24,7 +24,9 @@ class ClientTest(unittest.TestCase):
         self.assertEqual(json.loads(self.client.get_puzzle(1539)), puzzle)
 
     def test_get_puzzlelist(self):
-        self.client.get_puzzlelist()
+        author = '<a href="/user.aspx?name=igoro">igoro</a>'
+        puzzles = self.client.get_puzzlelist(filter_by=('author', author))
+        self.assertEqual(24, len(puzzles))
 
 
 if __name__ == '__main__':
