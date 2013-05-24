@@ -3,10 +3,13 @@ import unittest
 
 from zlejrob.client import Client
 from zlejrob.test import puzzles
+from zlejrob import config
 
 class ClientTest(unittest.TestCase):
     def setUp(self):
         self.client = Client({
+            'name': config.robozzle_name,
+            'pass': config.robozzle_pass,
         })
 
     def test_login(self):

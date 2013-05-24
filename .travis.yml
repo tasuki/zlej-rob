@@ -2,5 +2,23 @@ language: python
 python:
     - "3.2"
     - "3.3"
+
+env:
+    global:
+        - secure: |-
+            On3kME6HZPk5dVdjVNdNkLB46s70bEYmjdo4yVU3tBzKjwMPTMfS2U1a1R4D
+            Fcu74bPJ/uz/F/CtTcwVlOqw2ESAWJefdGQXYw/nBSMpnWuwddGYHNVqMBBQ
+            OoUYuZuMHdWAp/AmAzUZ3xy7hK+XaHTcE1h1xnoKHAFdvPDAK+k=
+        - secure: |-
+            HT0SJfseu53BJNKbrSe6vzJY3HJ6y7JNxfd3dZXdYVxUyyif/0qiR/LFT6Xn
+            hpDTkMMKtdSqnW+JkjhYmkUfZXrR2yXtxMeRvZct+8ioecJwa/R2VjaIN/ec
+            PXrha1d4TRbpttE97ku8IAAsNnO4+B4Ne+lsvguaKNHhktpKXsc=
+
 install: "pip install -r requirements.txt --use-mirrors"
+
+before_script:
+    - mv zlejrob/config.py{.template,}
+    - sed -i "s/{{robozzle_name}}/$ROBOZZLE_NAME/" zlejrob/config.py
+    - sed -i "s/{{robozzle_pass}}/$ROBOZZLE_PASS/" zlejrob/config.py
+
 script: "python -m unittest discover"
