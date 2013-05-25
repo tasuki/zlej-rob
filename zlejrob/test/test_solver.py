@@ -3,11 +3,12 @@ import unittest
 from unittest_data_provider import data_provider
 
 from .. import Runner, Solver
+from .. import solver
 from . import puzzles
 
 class SolverTest(unittest.TestCase):
-    def setUp(self):
-        self.solver = Solver(Runner(), {
+    def get_solver(self, puzzle = None):
+        return Solver(puzzle, Runner(), {
             'star_score': 4,
             'reached_score': 2,
             'length_penalty': 1,
@@ -15,12 +16,11 @@ class SolverTest(unittest.TestCase):
             'mutability': 1,
             'offsprings': 100,
             'survivors': 100,
-            #'debug': True,
         })
 
     def test_get_instruction_numbers(self):
         self.assertEqual((0, 1, 10, 11, 12, 30),
-                         self.solver.get_instruction_numbers([2,3,0,1,0]))
+                         solver.get_instruction_numbers([2,3,0,1,0]))
 
     actions = lambda: (
         (['F','L','R','1','2','4'], 0, [3,4,0,1,0]),
@@ -37,18 +37,19 @@ class SolverTest(unittest.TestCase):
             'subs': functions,
             'allowedCommands': allowed,
         }
-        self.assertEqual(expected, self.solver.get_actions(puzzle))
+        self.assertEqual(expected, solver.get_actions(puzzle))
 
     def test_mutate(self):
         puzzle = {
             'subs': [3, 4, 0, 0, 0],
             'allowedCommands': 0,
+            'board': [],
         }
         program = ((), (), (), (), ())
         reached_1 = False
         reached_2 = False
         for i in range(100):
-            program = self.solver.mutate(puzzle, program)
+            program = self.get_solver(puzzle).mutate(program)
             if len(program[0]) == 3:
                 reached_1 = True
             if len(program[1]) == 4:
@@ -64,7 +65,7 @@ class SolverTest(unittest.TestCase):
 
     @data_provider(puzzles)
     def test_solve(self, puzzle):
-        program = self.solver.solve(puzzles.puzzles[puzzle])
+        program = self.get_solver(puzzles.puzzles[puzzle]).solve()
 
 
 if __name__ == '__main__':
