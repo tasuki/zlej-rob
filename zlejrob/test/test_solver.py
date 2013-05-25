@@ -2,13 +2,12 @@ import unittest
 
 from unittest_data_provider import data_provider
 
-from .. import Runner, Solver
-from .. import solver
+from .. import Runner, solve
 from . import puzzles
 
-class SolverTest(unittest.TestCase):
+class SolveTest(unittest.TestCase):
     def get_solver(self, puzzle = None):
-        return Solver(puzzle, Runner(), {
+        return solve.Solver(puzzle, Runner(), {
             'star_score': 4,
             'reached_score': 2,
             'length_penalty': 1,
@@ -20,7 +19,7 @@ class SolverTest(unittest.TestCase):
 
     def test_get_instruction_numbers(self):
         self.assertEqual((0, 1, 10, 11, 12, 30),
-                         solver.get_instruction_numbers([2,3,0,1,0]))
+                         solve.get_instruction_numbers([2,3,0,1,0]))
 
     actions = lambda: (
         (['F','L','R','1','2','4'], 0, [3,4,0,1,0]),
@@ -37,7 +36,7 @@ class SolverTest(unittest.TestCase):
             'subs': functions,
             'allowedCommands': allowed,
         }
-        self.assertEqual(expected, solver.get_actions(puzzle))
+        self.assertEqual(expected, solve.get_actions(puzzle))
 
     def test_mutate(self):
         puzzle = {
