@@ -1,8 +1,6 @@
 import math
 import random
 
-from . import parse
-
 class Solver:
     COLORS = ('_', 'r', 'g', 'b')
 
@@ -14,6 +12,15 @@ class Solver:
         self.actions = get_actions(puzzle)
         self.max_score = get_max_score(puzzle['board'], settings['star_score'])
         self.instruction_numbers = get_instruction_numbers(puzzle['subs'])
+
+        self.observers = []
+
+    def attach(self, observer):
+        self.observers.append(observer)
+
+    def notify(self, event, *args):
+        for observer in self.observers:
+            getattr(observer, event)(*args)
 
     def mutate(self, program):
         """Create a random mutation of a program."""
@@ -86,27 +93,12 @@ class Solver:
                             programs_ordered[mutation_score].add(mutation)
 
                         if stars == total_stars:
-                            if 'debug' in self.settings:
-                                print(' ')
-                                print('SOLVED')
-                                print('Generation %i, score %i, survivors %i, programs %i'
-                                      % (generation, mutation_score, survivors, len(programs_all)))
-                                print(parse.string_from_instructions(mutation))
+                            self.notify('solved', generation, programs_all,
+                                        mutation, mutation_score)
                             return mutation
 
-            if 'debug' in self.settings:
-                max_score = False
-                for i,programs in enumerate(reversed(programs_ordered)):
-                    score = self.max_score - i - 1
-                    if len(programs):
-                        if max_score == False:
-                            max_score = score
-                            max_count = len(programs)
-                        cutoff = score
-
-                print('Generation %i, max score %i (%i programs), cutoff %i, survivors %i, programs %i'
-                      % (generation, max_score, max_count, cutoff, survivors, len(programs_all)))
-
+            self.notify('generation_finished', generation, programs_all,
+                        programs_ordered, self.max_score, survivors)
 
 def get_actions(puzzle):
     """Get available actions for the puzzle."""
