@@ -3,7 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-from zlejrob.exceptions import UnexpectedHTTPStatusCode
+from .exceptions import UnexpectedHTTPStatusCode
 
 class Client:
     baseurl = "http://robozzle.com/"

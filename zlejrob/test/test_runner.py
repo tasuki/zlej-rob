@@ -2,10 +2,9 @@ import unittest
 
 from unittest_data_provider import data_provider
 
-from zlejrob.runner import Runner
-from zlejrob.parser import Parser
-from zlejrob.exceptions import OffTheBoardError
-from zlejrob.test import puzzles
+from .. import parse, Runner
+from ..exceptions import OffTheBoardError
+from . import puzzles
 
 class RunnerTest(unittest.TestCase):
     def setUp(self):
@@ -72,8 +71,7 @@ class RunnerTest(unittest.TestCase):
     @data_provider(programs)
     def test_run(self, puzzle_name, expected, program):
         puzzle = puzzles.puzzles[puzzle_name]
-        p = Parser()
-        instructions = p.instructions_from_string(program)
+        instructions = parse.instructions_from_string(program)
 
         self.assertEqual(self.runner.run(puzzle, instructions), expected)
 

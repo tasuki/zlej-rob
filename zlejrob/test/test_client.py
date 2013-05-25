@@ -1,9 +1,8 @@
 import json
 import unittest
 
-from zlejrob.client import Client
-from zlejrob.test import puzzles
-from zlejrob import config
+from .. import Client, config
+from . import puzzles
 
 class ClientTest(unittest.TestCase):
     def setUp(self):

@@ -1,6 +1,6 @@
 import collections
 
-from zlejrob.exceptions import OffTheBoardError
+from .exceptions import OffTheBoardError
 
 class Runner:
     COLORS = ('R', 'G', 'B')

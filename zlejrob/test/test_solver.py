@@ -2,9 +2,8 @@ import unittest
 
 from unittest_data_provider import data_provider
 
-from zlejrob.runner import Runner
-from zlejrob.solver import Solver
-from zlejrob.test import puzzles
+from .. import Runner, Solver
+from . import puzzles
 
 class SolverTest(unittest.TestCase):
     def setUp(self):

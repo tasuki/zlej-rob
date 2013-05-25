@@ -1,7 +1,7 @@
 import math
 import random
 
-from zlejrob.parser import Parser
+from . import parse
 
 class Solver:
     COLORS = ('_', 'r', 'g', 'b')
@@ -111,12 +111,11 @@ class Solver:
 
                         if stars == total_stars:
                             if 'debug' in self.settings:
-                                parser = Parser()
                                 print(' ')
                                 print('SOLVED')
                                 print('Generation %i, score %i, survivors %i, programs %i'
                                       % (generation, mutation_score, survivors, len(programs_all)))
-                                print(parser.string_from_instructions(mutation))
+                                print(parse.string_from_instructions(mutation))
                             return mutation
 
             if 'debug' in self.settings:

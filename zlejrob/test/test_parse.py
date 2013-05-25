@@ -1,5 +1,6 @@
 import unittest
-import zlejrob.parser
+
+from .. import parse
 
 class ParserTest(unittest.TestCase):
     instructions = (
@@ -14,15 +15,12 @@ class ParserTest(unittest.TestCase):
 
     program = "_F_2_4_F_F_Fg4_R_F_F|_R||rL_F||"
 
-    def setUp(self):
-        self.parser = zlejrob.parser.Parser()
-
     def test_instructions_from_string(self):
-        instructions = self.parser.instructions_from_string(self.program)
+        instructions = parse.instructions_from_string(self.program)
         self.assertEqual(self.instructions, instructions)
 
     def test_string_from_instructions(self):
-        program = self.parser.string_from_instructions(self.instructions)
+        program = parse.string_from_instructions(self.instructions)
         self.assertEqual(self.program, program)
 
 
