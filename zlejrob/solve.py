@@ -5,20 +5,38 @@ class Solver:
     COLORS = ('_', 'r', 'g', 'b')
 
     def __init__(self, puzzle, runner, settings):
+        # save params
         self.puzzle = puzzle
         self.runner = runner
         self.settings = settings
 
-        self.actions = get_actions(puzzle)
-        self.max_score = get_max_score(puzzle['board'], settings['star_score'])
-        self.instruction_numbers = get_instruction_numbers(puzzle['subs'])
+        # puzzle properties
+        self.actions = get_actions(self.puzzle)
+        self.instruction_numbers = get_instruction_numbers(self.puzzle['subs'])
 
         self.observers = []
 
+    def initialize(self):
+        # puzzle properties
+        self.total_stars = get_total_stars(self.puzzle['board'])
+        self.max_score = get_max_score(self.puzzle['board'],
+                                       self.settings['star_score'])
+
+        # all tried programs
+        self.programs_all = set()
+
+        # programs ordered by their score (low scores potentially dropped)
+        self.programs_ordered = [set() for x in range(self.max_score)]
+        self.programs_ordered[1].add(((), (), (), (), ()))
+
+        self.generation = 0
+
     def attach(self, observer):
+        """Attach an observer."""
         self.observers.append(observer)
 
     def notify(self, event, *args):
+        """Notify observers of an event."""
         for observer in self.observers:
             getattr(observer, event)(*args)
 
@@ -50,24 +68,47 @@ class Solver:
 
         return tuple(tuple(i for i in func if i != None) for func in clusterfuck)
 
+    def get_score(self, mutation, stars, reached):
+        """Score a mutation based on reached stars and fields."""
+        return (stars * self.settings['star_score']
+                + reached * self.settings['reached_score']
+                - sum([len(x) for x in mutation]
+                  * self.settings['length_penalty']))
+
+    def mutate_and_evaluate(self, program):
+        """TODO!!"""
+        while True:
+            mutation = self.mutate(program)
+            if mutation not in self.programs_all: break
+        self.programs_all.add(mutation)
+
+        stars, reached = self.runner.run(self.puzzle, mutation)
+        mutation_score = self.get_score(mutation, stars, reached)
+
+        if stars == self.total_stars:
+            self.notify('solved', self.generation, self.programs_all,
+                        mutation, mutation_score)
+            return mutation
+
+        if mutation_score > self.current_score:
+            self.programs_ordered[mutation_score].add(mutation)
+            self.notify('added', mutation, mutation_score)
+
+        return False
+
     def solve(self):
-        # programs ordered by their score (low scores potentially dropped)
-        programs_ordered = [set() for x in range(self.max_score)]
-        programs_ordered[1].add(((), (), (), (), ()))
-        programs_all = set()
+        """Solve the puzzle."""
+        self.initialize()
 
-        total_stars = len([x for x in self.puzzle['board'] if x in ['R', 'G', 'B']])
-
-        generation = 0
         while True:
             survivors = 0
-            generation += 1
+            self.generation += 1
             clearing = False
-            for i,programs in enumerate(reversed(programs_ordered)):
-                score = self.max_score - i - 1
+            for i,programs in enumerate(reversed(self.programs_ordered)):
+                self.current_score = self.max_score - i - 1
 
                 if clearing == True:
-                    programs_ordered[score].clear()
+                    self.programs_ordered[self.current_score].clear()
 
                 length = len(programs)
                 if length == 0: continue
@@ -79,26 +120,13 @@ class Solver:
 
                 for program in programs:
                     for i in range(self.settings['offsprings']):
-                        while True:
-                            mutation = self.mutate(program)
-                            if mutation not in programs_all: break
-                        programs_all.add(mutation)
-
-                        stars, reached = self.runner.run(self.puzzle, mutation)
-                        mutation_score = (stars * self.settings['star_score']
-                                          + reached * self.settings['reached_score']
-                                          - sum([len(x) for x in mutation]
-                                            * self.settings['length_penalty']))
-                        if mutation_score > score:
-                            programs_ordered[mutation_score].add(mutation)
-
-                        if stars == total_stars:
-                            self.notify('solved', generation, programs_all,
-                                        mutation, mutation_score)
+                        mutation = self.mutate_and_evaluate(program)
+                        if mutation != False:
                             return mutation
 
-            self.notify('generation_finished', generation, programs_all,
-                        programs_ordered, self.max_score, survivors)
+            self.notify('generation_finished', self.generation,
+                        self.programs_all, self.programs_ordered,
+                        self.max_score, survivors)
 
 def get_actions(puzzle):
     """Get available actions for the puzzle."""
@@ -125,3 +153,7 @@ def get_max_score(board, star_score):
     """Get maximum possible score for board size."""
     board_size = len(board)
     return 1 + board_size + board_size * star_score
+
+def get_total_stars(board):
+    """Get total number of stars on the board."""
+    return len([x for x in board if x in ['R', 'G', 'B']])

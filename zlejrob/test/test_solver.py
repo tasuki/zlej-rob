@@ -42,7 +42,6 @@ class SolveTest(unittest.TestCase):
         puzzle = {
             'subs': [3, 4, 0, 0, 0],
             'allowedCommands': 0,
-            'board': [],
         }
         program = ((), (), (), (), ())
         reached_1 = False

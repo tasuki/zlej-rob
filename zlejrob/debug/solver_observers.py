@@ -1,6 +1,8 @@
 from .. import parse
 
 class Dummy:
+    def added(self, *args):
+        pass
     def generation_finished(self, *args):
         pass
     def solved(self, *args):
@@ -27,3 +29,7 @@ class Printer(Dummy):
         print('Generation %i, score %i, programs %i'
               % (generation, mutation_score, len(programs_all)))
         print(parse.string_from_instructions(mutation))
+
+class Logger(Dummy):
+    def __init__(self):
+        pass
