@@ -30,6 +30,8 @@ class ClientTest(unittest.TestCase):
         puzzles = self.client.get_puzzlelist(filter_by=('author', author))
         self.assertEqual(24, len(puzzles))
 
+    def test_submit(self):
+        self.client.submit(27, '_F_L_F_R_1|||||')
 
 if __name__ == '__main__':
     unittest.main()

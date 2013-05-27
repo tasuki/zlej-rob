@@ -75,3 +75,17 @@ class Client:
 
             puzzles.append(puzzle)
         return puzzles
+
+    def submit(self, level, solution):
+        """Submit a problem solution."""
+        self.login()
+
+        url = self.baseurl + "js/submit.aspx"
+        params = {
+            'solution': solution,
+            'levelId': level,
+        }
+
+        response = self.session.post(url, params, allow_redirects=False)
+        if response.status_code != 200:
+            raise UnexpectedHTTPStatusCode('Solution could not be submitted.')
