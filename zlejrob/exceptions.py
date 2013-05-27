@@ -3,3 +3,6 @@ class OffTheBoardError(RuntimeError):
 
 class UnexpectedHTTPStatusCode(IOError):
     pass
+
+class GenerationLimitExceeded(RuntimeError):
+    pass

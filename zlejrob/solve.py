@@ -1,6 +1,8 @@
 import math
 import random
 
+from .exceptions import GenerationLimitExceeded
+
 class Solver:
     COLORS = ('_', 'r', 'g', 'b')
 
@@ -103,6 +105,10 @@ class Solver:
         while True:
             survivors = 0
             self.generation += 1
+            if "generation_limit" in self.settings:
+                if self.generation > self.settings['generation_limit']:
+                    raise GenerationLimitExceeded('Give it up!')
+
             clearing = False
             for i,programs in enumerate(reversed(self.programs_ordered)):
                 self.current_score = self.max_score - i - 1
