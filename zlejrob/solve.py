@@ -87,14 +87,14 @@ class Solver:
         stars, reached = self.runner.run(self.puzzle, mutation)
         mutation_score = self.get_score(mutation, stars, reached)
 
+        if mutation_score > self.current_score:
+            self.programs_ordered[mutation_score].add(mutation)
+            self.notify('added', mutation, mutation_score, program, self.generation)
+
         if stars == self.total_stars:
             self.notify('solved', self.generation, self.programs_all,
                         mutation, mutation_score)
             return mutation
-
-        if mutation_score > self.current_score:
-            self.programs_ordered[mutation_score].add(mutation)
-            self.notify('added', mutation, mutation_score)
 
         return False
 

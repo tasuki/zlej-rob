@@ -1,3 +1,5 @@
+import os
+
 from .. import parse
 
 class Dummy:
@@ -31,5 +33,35 @@ class Printer(Dummy):
         print(parse.string_from_instructions(mutation))
 
 class Logger(Dummy):
-    def __init__(self):
+    original = ((), (), (), (), ())
+
+    def __init__(self, directory):
+        os.mkdir(directory)
+        self.history = {}
+
+    def added(self, mutation, score, parent, generation):
+        self.history[mutation] = {
+            'generation': generation,
+            'parent': parent,
+            'score': score,
+        }
+
+    def generation_finished(self, generation, programs_all,
+                            programs_ordered, max_score, survivors):
         pass
+
+    def get_history(self):
+        return self.history
+
+    def get_program_history(self, program):
+        info = [{
+            'program': parse.string_from_instructions(program),
+            'generation': self.history[program]['generation'],
+            'score': self.history[program]['score'],
+        }]
+
+        parent = self.history[program]['parent']
+        if parent == self.original:
+            return info
+
+        return self.get_program_history(parent) + info
