@@ -1,3 +1,4 @@
+import json
 import re
 
 def instructions_from_string(program):
@@ -23,5 +24,8 @@ def string_from_instructions(instructions):
 
     return ''.join([func + '|' for func in funcs])
 
-def puzzle_from_json():
-    pass
+def puzzle_from_json(string):
+    """Get puzzle dictionary from json string."""
+    puzzle = json.loads(string)
+    puzzle['board'] = list(puzzle['board'])
+    return puzzle
