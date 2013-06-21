@@ -1,3 +1,4 @@
+import json
 import os
 
 from .. import parse
@@ -22,8 +23,10 @@ class Printer(Dummy):
                     max_count = len(programs)
                 cutoff = score
 
-        print('Generation %i, max score %i (%i programs), cutoff %i, survivors %i, programs %i'
-              % (generation, highest_score, max_count, cutoff, survivors, len(programs_all)))
+        best = next(iter(programs_ordered[highest_score]))
+        best = parse.string_from_instructions(best)
+        print('Generation %i, max score %i (%i programs), cutoff %i, survivors %i, programs %i, best %s' %
+              (generation, highest_score, max_count, cutoff, survivors, len(programs_all), best))
 
     def solved(self, generation, programs_all, mutation, mutation_score):
         print(' ')
@@ -35,8 +38,10 @@ class Printer(Dummy):
 class Logger(Dummy):
     original = ((), (), (), (), ())
 
-    def __init__(self, directory):
+    def __init__(self, puzzle, directory):
         os.mkdir(directory)
+        self.directory = directory
+        self.puzzle = puzzle
         self.history = {}
 
     def added(self, mutation, score, parent, generation):
@@ -48,7 +53,22 @@ class Logger(Dummy):
 
     def generation_finished(self, generation, programs_all,
                             programs_ordered, max_score, survivors):
-        pass
+
+        programs = {}
+        for instructions,info in self.history.items():
+            programs[parse.string_from_instructions(instructions)] = {
+                'parent': parse.string_from_instructions(info['parent']),
+                'generation': info['generation'],
+                'score': info['score'],
+            }
+
+        data = {
+            'puzzle': self.puzzle,
+            'programs': programs,
+        }
+
+        handle = open('%s/history-%s.js' % (self.directory, generation), 'w');
+        handle.write(json.dumps(data))
 
     def get_history(self):
         return self.history
