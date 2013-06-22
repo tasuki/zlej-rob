@@ -22,7 +22,8 @@ class Solver:
         # puzzle properties
         self.total_stars = get_total_stars(self.puzzle['board'])
         self.max_score = get_max_score(self.puzzle['board'],
-                                       self.settings['star_score'])
+                                       self.settings['star_score'],
+                                       self.settings['reached_score'])
 
         # all tried programs
         self.programs_all = set()
@@ -155,10 +156,10 @@ def get_instruction_numbers(subs):
     return tuple(10*k + i for k,func in enumerate(subs)
                  for i in range(func))
 
-def get_max_score(board, star_score):
+def get_max_score(board, star_score, reached_score):
     """Get maximum possible score for board size."""
     board_size = len(board)
-    return 1 + board_size + board_size * star_score
+    return 1 + board_size * reached_score + board_size * star_score
 
 def get_total_stars(board):
     """Get total number of stars on the board."""
