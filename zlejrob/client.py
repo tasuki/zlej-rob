@@ -45,7 +45,7 @@ class Client:
         url = self.baseurl + "js/play.aspx?puzzle=" + str(id)
         content = self.session.get(url).text
         puzzle = re.search('var puzzles = \[(.*?)\];', content, re.DOTALL)
-        return re.sub('([a-zA-Z]*):', '"\\1":', puzzle.group(1))
+        return re.sub('^ *([a-zA-Z]*):', '  "\\1":', puzzle.group(1), 0, re.MULTILINE)
 
     def get_puzzlelist(self, sort_by="campaign", filter_by=None):
         """Get list of existing puzzles."""
