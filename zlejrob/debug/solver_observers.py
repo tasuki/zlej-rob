@@ -12,6 +12,9 @@ class Dummy:
         pass
 
 class Printer(Dummy):
+    def __init__(self, puzzle):
+        self.puzzle = puzzle
+
     def generation_finished(self, generation, programs_all,
                             programs_ordered, max_score, survivors):
         highest_score = False
@@ -30,7 +33,7 @@ class Printer(Dummy):
 
     def solved(self, generation, programs_all, mutation, mutation_score):
         print(' ')
-        print('SOLVED')
+        print('SOLVED %s!' % (self.puzzle['id']))
         print('Generation %i, score %i, programs %i'
               % (generation, mutation_score, len(programs_all)))
         print(parse.string_from_instructions(mutation))
