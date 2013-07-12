@@ -47,7 +47,8 @@ configuration myself, I'll leave that as an exercise for the reader:
 
 ## Contribute
 
-The test suite can be run with:
+A prerequisite for running the test suite is putting your robozzle.com login
+details in `zlejrob/config.py`. The test suite can be run with:
 
     python -m unittest discover
 
