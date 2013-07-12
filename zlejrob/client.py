@@ -42,9 +42,16 @@ class Client:
 
     def get_puzzle(self, id):
         """Fetch valid json puzzle string from puzzle id."""
-        url = self.baseurl + "js/play.aspx?puzzle=" + str(id)
+        id = str(id)
+        url = self.baseurl + "js/play.aspx?puzzle=" + id
         content = self.session.get(url).text
+        if re.search('error occurred while processing your request', content):
+            # Strictly speaking not a http status code, but it should be!
+            raise UnexpectedHTTPStatusCode("Puzzle %s probably doesn't exist." % id)
+
         puzzle = re.search('var puzzles = \[(.*?)\];', content, re.DOTALL)
+        if puzzle is None:
+            raise RuntimeError("Puzzle string not in response.")
         return re.sub('^ *([a-zA-Z]*):', '  "\\1":', puzzle.group(1), 0, re.MULTILINE)
 
     def get_puzzlelist(self, sort_by="campaign", filter_by=None):

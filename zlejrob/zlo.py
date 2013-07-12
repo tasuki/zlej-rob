@@ -57,7 +57,7 @@ class Zlo:
         while puzzle is None:
             try:
                 puzzle = self.client.get_puzzle(puzzle_id)
-            except:
+            except RuntimeError:
                 print(('Failed getting puzzle %s, ' \
                      + 'will retry in 10 seconds.') % puzzle_id)
                 time.sleep(10)
@@ -145,4 +145,9 @@ class Zlo:
                       % (puzzle['id']))
                 continue
 
-            self.fetch_solve_submit(puzzle['id'])
+            try:
+                self.fetch_solve_submit(puzzle['id'])
+            except Exception as e:
+                print('~~~Exception~~~')
+                print(e)
+                print('~~~Endception~~~')
