@@ -16,6 +16,10 @@ dependencies with:
 
     pip install -r requirements.txt --use-mirrors
 
+> Watch out: `pip` refers to Python 2 version of pip on certain systems
+> (Ubuntu). You might need to specify the version explicitly by calling e.g.
+> `pip-3.3` instead.
+
 ## Use
 
 The following is a sample of how to run zlejrob. Not knowing optimal solver
