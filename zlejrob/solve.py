@@ -139,27 +139,25 @@ class Solver:
         self.initialize()
 
         while True:
+            # generation
             survivors = 0
             self.generation += 1
             if "generation_limit" in self.settings:
                 if self.generation > self.settings['generation_limit']:
                     raise GenerationLimitExceeded('Give it up!')
 
-            clearing = False
+            # loop through programs by score, from hi to low
             for i,programs in enumerate(reversed(self.programs_ordered)):
                 self.current_score = self.max_score - i - 1
 
-                if clearing == True:
-                    self.programs_ordered[self.current_score].clear()
-
-                length = len(programs)
-                if length == 0: continue
-
-                survivors += length
                 if survivors > self.settings['survivors']:
-                    clearing = True
+                    # score too low, remove program
+                    self.programs_ordered[self.current_score].clear()
                     continue
 
+                survivors += len(programs)
+
+                # mutate program and see if found a solution
                 for program in programs:
                     for i in range(self.settings['offsprings']):
                         mutation = self.mutate_and_evaluate(program)
