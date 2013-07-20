@@ -50,20 +50,26 @@ class Solver:
 
         if (mutations > len(self.instruction_numbers)):
             mutations = len(self.instruction_numbers)
+        # randomly choose instructions to be overridden
         sampled = random.sample(self.instruction_numbers, mutations)
 
         # TODO refactor clusterfuck
+        # initialize empty list of functions of appropriate length
         clusterfuck = [list([None]*i) for i in self.puzzle['subs']]
         for k,func in enumerate(clusterfuck):
             for i,inst in enumerate(func):
                 if k*10 + i in sampled:
+                    # instruction chosen to be altered
                     if random.random() < self.settings['degeneration']:
+                        # remove instruction
                         clusterfuck[k][i] = None
                     else:
+                        # change instruction to random color and action
                         color = random.choice(self.COLORS)
                         action = random.choice(self.actions)
                         clusterfuck[k][i] = (color, action, k*10 + i)
                 else:
+                    # inherit instruction from parent program
                     try:
                         clusterfuck[k][i] = program[k][i]
                     except IndexError:
