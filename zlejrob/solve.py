@@ -7,6 +7,22 @@ class Solver:
     COLORS = ('_', 'r', 'g', 'b')
 
     def __init__(self, puzzle, runner, settings):
+        """Solver constructor
+
+        Args:
+            puzzle: dict, puzzle info
+            runner: Runner, puzzle runner
+            settings: dict
+                star_score: int, points for collecting a star
+                reached_score: int, points for reaching a field
+                length_penalty: int, minus points for instruction used
+                degeneration: float, probability of instruction removal
+                mutability: int, number of changed instructions =
+                                 = gaus(0,1) * mutability
+                offsprings: int, offsprings per parent
+                survivors: int, programs surviving
+                generation_limit: int, when to give up
+        """
         # save params
         self.puzzle = puzzle
         self.runner = runner
@@ -19,6 +35,7 @@ class Solver:
         self.observers = []
 
     def initialize(self):
+        """Initialize global properties"""
         # puzzle properties
         self.total_stars = get_total_stars(self.puzzle['board'])
         self.max_score = get_max_score(self.puzzle['board'],
@@ -44,7 +61,13 @@ class Solver:
             getattr(observer, event)(*args)
 
     def mutate(self, program):
-        """Create a random mutation of a program."""
+        """Create a random mutation of a program.
+
+        Args:
+            program: tuple
+        Returns:
+            tuple, mutated program
+        """
         mutations = int(math.ceil(abs(random.gauss(0, 1)) *
                                   self.settings['mutability']))
 
@@ -85,7 +108,13 @@ class Solver:
                   * self.settings['length_penalty']))
 
     def mutate_and_evaluate(self, program):
-        """TODO!!"""
+        """Create a mutation, check if it solves the puzzle.
+
+        Args:
+            program: tuple
+        Returns:
+            solution or False
+        """
         while True:
             mutation = self.mutate(program)
             if mutation not in self.programs_all: break
