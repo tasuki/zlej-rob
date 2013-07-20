@@ -33,11 +33,9 @@ class Zlo:
 
     def make_dirs(self):
         """Create data directories if they don't exist"""
-        for directory in [self.datadir + '/debug',
-                          self.datadir + '/puzzles',
-                          self.datadir + '/solutions']:
+        for directory in ['debug', 'puzzles', 'solutions']:
             try:
-                os.makedirs(directory)
+                os.makedirs('%s/%s' % (self.datadir, directory))
             except OSError:
                 pass
 
