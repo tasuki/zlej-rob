@@ -1,7 +1,7 @@
 # Zlej Rob
 
-A semi-intelligent solver for [RoboZZle]. See [zlejrob's profile] &ndash; currently
-in [top 100] out of 10,000+ players.
+A semi-intelligent solver for [RoboZZle]. Solved 1,000+ puzzles. See [zlejrob's
+profile] &ndash; currently in [top 100] of 10,000+ players.
 
 [RoboZZle]:          http://robozzle.com/
 [top 100]:           http://robozzle.com/scoreboard.aspx
