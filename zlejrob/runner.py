@@ -10,7 +10,14 @@ class Runner:
         self.max_steps = max_steps
 
     def move(self, position, direction):
-        """Move from position in direction."""
+        """Move from position in direction.
+
+        Args:
+            position: int, position on the board
+            direction: int, facing direction
+        Returns:
+            int, new position on the board
+        """
         if direction == 0:
             if position % self.width == self.width - 1:
                 raise OffTheBoardError
@@ -35,7 +42,14 @@ class Runner:
             raise ValueError('No direction %s.' % direction)
 
     def turn(self, direction, turn):
-        """Rotate from direction."""
+        """Rotate from direction.
+
+        Args:
+            direction: int, facing direction
+            turn: string, 'L' or 'R'
+        Returns:
+            int, new direction
+        """
         if turn == 'L':
             direction -= 1
         elif turn == 'R':
@@ -109,7 +123,7 @@ class Runner:
                     return self.count()
 
                 if board[position] == ' ':
-                    # Fallen off the board
+                    # Fallen off puzzle tiles
                     return self.count()
 
                 self.reached[position] = True
