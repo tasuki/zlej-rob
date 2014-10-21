@@ -1,10 +1,10 @@
 # Zlej Rob
 
-A semi-intelligent solver for [RoboZZle]. Solved 1,000+ puzzles. See [zlejrob's
-profile] &ndash; currently in [top 100] of 10,000+ players.
+A semi-intelligent solver for [RoboZZle]. Solved 2,000+ puzzles. See [zlejrob's
+profile] &ndash; currently in [top 50] of 10,000+ players.
 
 [RoboZZle]:          http://robozzle.com/
-[top 100]:           http://robozzle.com/scoreboard.aspx
+[top 50]:            http://robozzle.com/scoreboard.aspx
 [zlejrob's profile]: http://robozzle.com/user.aspx?name=zlejrob
 
 [![Build Status](https://travis-ci.org/tasuk/zlej-rob.png?branch=master)](https://travis-ci.org/tasuk/zlej-rob)
