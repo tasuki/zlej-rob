@@ -120,6 +120,21 @@ class Zlo:
         if solution:
             self.submit(puzzle_id, solution)
 
+    def fetch_solve_submit_unsolved(self, puzzle_id):
+        puzzle_id = str(puzzle_id)
+        if os.path.isfile('%s/solutions/%s.js' % (self.datadir, puzzle_id)):
+            print(' ')
+            print("Skipping puzzle %s - it's already been solved." \
+                  % (puzzle_id))
+            return
+
+        try:
+            self.fetch_solve_submit(puzzle_id)
+        except Exception as e:
+            print('~~~Exception~~~')
+            print(e)
+            print('~~~Endception~~~')
+
     def solve_unsolved_puzzles(self, sort_by='campaign', skip_until=None):
         """Fetch a list of puzzles, solve them, and submit their solutions
 
