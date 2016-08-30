@@ -14,7 +14,7 @@ env:
             hpDTkMMKtdSqnW+JkjhYmkUfZXrR2yXtxMeRvZct+8ioecJwa/R2VjaIN/ec
             PXrha1d4TRbpttE97ku8IAAsNnO4+B4Ne+lsvguaKNHhktpKXsc=
 
-install: "pip install -r requirements.txt --use-mirrors"
+install: "pip install -r requirements.txt"
 
 before_script:
     - mv zlejrob/config.py{.template,}
