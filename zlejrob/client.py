@@ -60,7 +60,7 @@ class Client:
         response = self.session.get(self.baseurl + "js/index.aspx?sortby=" + sort_by)
 
         puzzles = []
-        soup = BeautifulSoup(response.text)
+        soup = BeautifulSoup(response.text, "lxml")
         for row in soup.table.find_all('tr'):
             cells = row.find_all('td')
             if len(cells) == 0:
