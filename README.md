@@ -7,7 +7,7 @@ profile] &ndash; currently in [top 50] of 100,000+ players.
 [top 50]:            http://robozzle.com/scoreboard.aspx
 [zlejrob's profile]: http://robozzle.com/user.aspx?name=zlejrob
 
-[![Build Status](https://travis-ci.org/tasuk/zlej-rob.png?branch=master)](https://travis-ci.org/tasuk/zlej-rob)
+[![Build Status](https://travis-ci.org/tasuki/zlej-rob.png?branch=master)](https://travis-ci.org/tasuki/zlej-rob)
 
 ## Install
 
