@@ -30,6 +30,8 @@ class Zlo:
         self.datadir = datadir
         self.log = log
         self.make_dirs()
+        self.retries = 10
+        self.sleep = 60
 
     def make_dirs(self):
         """Create data directories if they don't exist"""
@@ -52,17 +54,24 @@ class Zlo:
 
         print('Getting puzzle ' + puzzle_id)
         puzzle = None
-        while puzzle is None:
+        retries = 0
+        while retries < self.retries:
+            retries = retries + 1
             try:
                 puzzle = self.client.get_puzzle(puzzle_id)
             except RuntimeError:
                 print(('Failed getting puzzle %s, ' \
-                     + 'will retry in 10 seconds.') % puzzle_id)
-                time.sleep(10)
+                     + 'will retry in %s seconds.') % (puzzle_id, self.sleep))
+                time.sleep(self.sleep)
+
+        if puzzle is None:
+            print('Giving up on fetching %s' % puzzle_id)
+            return False
 
         f = open(fname, 'w')
         f.write(puzzle)
         f.close()
+        return True
 
     def solve(self, puzzle):
         """Solve puzzle from string"""
@@ -98,14 +107,17 @@ class Zlo:
 
     def submit(self, puzzle_id, solution):
         """Submit a puzzle solution to the website"""
-        while True:
+        retries = 0
+        while retries < self.retries:
+            retries = retries + 1
             try:
                 self.client.submit(puzzle_id, solution)
-                break
+                return True
             except:
                 print(('Failed submitting puzzle %s, ' \
                      + 'will retry in 10 seconds.') % puzzle_id)
                 time.sleep(10)
+        print('Giving up on submitting solution for %s' % puzzle_id)
 
     def fetch_solve_submit(self, puzzle_id):
         """Fetch a puzzle from the website, solve it, and submit solution
@@ -115,10 +127,11 @@ class Zlo:
         Args:
             puzzle_id: a numeric id of the puzzle
         """
-        self.fetch_puzzle(puzzle_id)
-        solution = self.solve_puzzle_file(puzzle_id)
-        if solution:
-            self.submit(puzzle_id, solution)
+        fetched = self.fetch_puzzle(puzzle_id)
+        if fetched:
+            solution = self.solve_puzzle_file(puzzle_id)
+            if solution:
+                self.submit(puzzle_id, solution)
 
     def fetch_solve_submit_unsolved(self, puzzle_id):
         puzzle_id = str(puzzle_id)
